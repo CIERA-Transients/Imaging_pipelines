@@ -52,16 +52,16 @@ def main_pipeline(telescope,data_path,cal_path=None,input_target=None,skip_red=N
             ' correct name or this telescope is available.''')
         sys.exit(-1)
 
-    raw_path = data_path+'/raw/' #path containing the raw data
+    raw_path = os.path.join(data_path,'raw/') #path containing the raw data
     if not os.path.exists(raw_path): #create reduced file path if it doesn't exist
         os.makedirs(raw_path)
-    bad_path = data_path+'/bad/' #path containing the raw data
+    bad_path = os.path.join(data_path,'bad/') #path containing the raw data
     if not os.path.exists(bad_path): #create reduced file path if it doesn't exist
         os.makedirs(bad_path)
-    spec_path = data_path+'/spec/' #path containing the raw data
+    spec_path = os.path.join(data_path,'spec/') #path containing the raw data
     if not os.path.exists(spec_path): #create reduced file path if it doesn't exist
         os.makedirs(spec_path)
-    red_path = data_path+'/red/' #path to write the reduced files
+    red_path = os.path.join(data_path,'red/') #path to write the reduced files
     if not os.path.exists(red_path): #create reduced file path if it doesn't exist
         os.makedirs(red_path)
 
@@ -95,9 +95,11 @@ def main_pipeline(telescope,data_path,cal_path=None,input_target=None,skip_red=N
         if os.path.exists(data_path+'/file_list.txt'):
             os.remove(data_path+'/file_list.txt')
         if reset=='all':
-            files = glob.glob(raw_path+'*')+glob.glob(bad_path+'*')+glob.glob(spec_path+'*')
+            files = glob.glob(os.path.join(raw_path,'*'))+\
+                    glob.glob(os.path.join(bad_path,'*'))+\
+                    glob.glob(os.path.join(spec_path,'*'))
         if reset=='raw':
-            files = glob.glob(raw_path+'*')
+            files = glob.glob(os.path.join(raw_path,'*'))
         for f in files:
             shutil.move(f,data_path)
     
@@ -107,7 +109,9 @@ def main_pipeline(telescope,data_path,cal_path=None,input_target=None,skip_red=N
     else:
         log.info('Sorting files and creating file lists.')
         # CDK - updated this to a os.path.join so it doesn't require trailing /
-        files = sorted(glob.glob(os.path.join(data_path,tel.raw_format(proc))))
+        file_search = os.path.join(data_path,tel.raw_format(proc))
+        log.info(f'Searching for files as: {file_search}')
+        files = sorted(glob.glob(file_search))
         if len(files) != 0:
             log.info(str(len(files))+' files found.')
             cal_list, sci_list, sky_list, time_list = Sort_files.sort_files(files,telescope,data_path,log)
