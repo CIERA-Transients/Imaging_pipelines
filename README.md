@@ -1,3 +1,3 @@
 # Imaging_pipelines
 
-Please note that CIERA-Transients/Imaging_pipelines has been moved to CIERA-Transients/POTPyRI
+Please note that the Pipeline for Optical/infraredTelescopes in Python for Reducing Images (POTPyRI) has been moved to CIERA-Transients/POTPyRI.
